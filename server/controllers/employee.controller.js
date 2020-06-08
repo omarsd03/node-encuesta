@@ -1,4 +1,5 @@
 const Employee = require('../models/employee');
+const qrcode = require('qrcode');
 
 const employeeCtrl = {};
 
@@ -8,6 +9,7 @@ employeeCtrl.getEmployees = async (req, res, next) => {
 };
 
 employeeCtrl.createEmployee = async (req, res, next) => {
+
     const employee = new Employee({
         sgi: req.body.sgi,
         primerPregunta: req.body.primerPregunta,
@@ -15,13 +17,16 @@ employeeCtrl.createEmployee = async (req, res, next) => {
         tercerPregunta: req.body.tercerPregunta,
         cuartaPregunta: req.body.cuartaPregunta,
         quintaPregunta: req.body.quintaPregunta
-        // name: req.body.name,
-        // position: req.body.position,
-        // office: req.body.office,
-        // salary: req.body.salary
     });
-    await employee.save();
-    res.json({status: 'Employee created'});
+
+    const encuesta = await employee.save();
+    const jsonData = { id: encuesta._id };
+    const request = JSON.stringify(jsonData);
+
+    qrcode.toDataURL(request, function (err, url) {
+      res.json(url);
+    });
+
 };
 
 employeeCtrl.getEmployee = async (req, res, next) => {

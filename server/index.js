@@ -16,5 +16,5 @@ app.use('/', require('./routes/employee.routes'));
 
 // starting the server
 app.listen(app.get('port'), () => {
-    console.log(`server on port ${app.get('port')}`);
+    console.log(`Servidor corriendo en el puerto ${app.get('port')}`);
 });
