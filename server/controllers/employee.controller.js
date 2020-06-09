@@ -16,7 +16,8 @@ employeeCtrl.createEmployee = async (req, res, next) => {
         segundaPregunta: req.body.segundaPregunta,
         tercerPregunta: req.body.tercerPregunta,
         cuartaPregunta: req.body.cuartaPregunta,
-        quintaPregunta: req.body.quintaPregunta
+        quintaPregunta: req.body.quintaPregunta,
+        fecha: new Date()
     });
 
     const encuesta = await employee.save();
@@ -35,21 +36,27 @@ employeeCtrl.getEmployee = async (req, res, next) => {
     res.json(employee);
 };
 
-employeeCtrl.editEmployee = async (req, res, next) => {
-    const { id } = req.params;
-    const employee = {
-        name: req.body.name,
-        position: req.body.position,
-        office: req.body.office,
-        salary: req.body.salary
-    };
-    await Employee.findByIdAndUpdate(id, {$set: employee}, {new: true});
-    res.json({status: 'Employee Updated'});
-};
+employeeCtrl.getEmployeeByDate = async (req, res, next) => {
+    const { fecha } = req.params;
+    const employees = await Employee.find({ "created_at": { "$gt": new Date(fecha) } });
+    res.json(employees);
+}
 
-employeeCtrl.deleteEmployee = async (req, res, next) => {
-    await Employee.findByIdAndRemove(req.params.id);
-    res.json({status: 'Employee Deleted'});
-};
+// employeeCtrl.editEmployee = async (req, res, next) => {
+//     const { id } = req.params;
+//     const employee = {
+//         name: req.body.name,
+//         position: req.body.position,
+//         office: req.body.office,
+//         salary: req.body.salary
+//     };
+//     await Employee.findByIdAndUpdate(id, {$set: employee}, {new: true});
+//     res.json({status: 'Employee Updated'});
+// };
+
+// employeeCtrl.deleteEmployee = async (req, res, next) => {
+//     await Employee.findByIdAndRemove(req.params.id);
+//     res.json({status: 'Employee Deleted'});
+// };
 
 module.exports = employeeCtrl;

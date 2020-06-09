@@ -8,6 +8,8 @@ const employeeSchema = new Schema({
     tercerPregunta: { type: String, required: true },
     cuartaPregunta: { type: String, required: true },
     quintaPregunta: { type: String, required: true }
+}, {
+    timestamps: true
 });
 
 module.exports = mongoose.model('Employee', employeeSchema);
