@@ -16,8 +16,7 @@ employeeCtrl.createEmployee = async (req, res, next) => {
         segundaPregunta: req.body.segundaPregunta,
         tercerPregunta: req.body.tercerPregunta,
         cuartaPregunta: req.body.cuartaPregunta,
-        quintaPregunta: req.body.quintaPregunta,
-        fecha: new Date()
+        quintaPregunta: req.body.quintaPregunta
     });
 
     const encuesta = await employee.save();
@@ -38,7 +37,14 @@ employeeCtrl.getEmployee = async (req, res, next) => {
 
 employeeCtrl.getEmployeeByDate = async (req, res, next) => {
     const { fecha } = req.params;
-    const employees = await Employee.find({ "created_at": { "$gt": new Date(fecha) } });
+    const fechaISO = new Date(fecha).toISOString();
+    console.log({fecha, fechaISO});
+    const employees = await Employee.find({
+      createdAt: {
+        $gte: fechaISO,
+        $lt: `${fecha}T23:59:59.000Z`,
+      },
+    });
     res.json(employees);
 }
 
